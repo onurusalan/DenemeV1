@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: anamnesis-app
+    env: python
+    plan: free
+    buildCommand: |
+      pip install --upgrade pip
+      pip install --no-cache-dir -r requirements.txt
+    startCommand: |
+      mkdir -p pythonProject/static/graphs pythonProject/static/reports
+      gunicorn --bind 0.0.0.0:$PORT pythonProject.app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.7
+      - key: PIP_DISABLE_PIP_VERSION_CHECK
+        value: 1
+      - key: PYTHONUNBUFFERED
+        value: 1
