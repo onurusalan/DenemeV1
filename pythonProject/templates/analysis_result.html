@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veri Analizi Sonuçları</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(125deg, #000428, #004e92);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .stats-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .nav-tabs .nav-link {
+            color: white;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: transparent;
+        }
+        .tab-content {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0 0 10px 10px;
+            padding: 20px;
+        }
+        .graph-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .graph-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .btn-download {
+            background: linear-gradient(45deg, #1a237e, #0d47a1);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Veri Analizi Sonuçları</h1>
+        <h3 class="mb-3">{{ filename }}</h3>
+        
+        <!-- Temel İstatistikler -->
+        <div class="stats-card">
+            <h4>Temel İstatistikler</h4>
+            <div class="row">
+                {% for stat in basic_stats %}
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>{{ stat.name }}:</span>
+                        <strong>{{ stat.value }}</strong>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Sekmeli Görünüm -->
+        <ul class="nav nav-tabs" id="analysisTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="histograms-tab" data-bs-toggle="tab" data-bs-target="#histograms" type="button" role="tab">
+                    Histogramlar
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="boxplots-tab" data-bs-toggle="tab" data-bs-target="#boxplots" type="button" role="tab">
+                    Boxplot
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="violin-tab" data-bs-toggle="tab" data-bs-target="#violin" type="button" role="tab">
+                    Violin Plot
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="correlation-tab" data-bs-toggle="tab" data-bs-target="#correlation" type="button" role="tab">
+                    Korelasyon
+                </button>
+            </li>
+            {% if time_series %}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="timeseries-tab" data-bs-toggle="tab" data-bs-target="#timeseries" type="button" role="tab">
+                    Zaman Serisi
+                </button>
+            </li>
+            {% endif %}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="details-tab" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab">
+                    Detaylı İstatistikler
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="analysisTabContent">
+            <!-- Histogramlar -->
+            <div class="tab-pane fade show active" id="histograms" role="tabpanel">
+                <div class="graph-container">
+                    {% for graph in graphs if 'histogram' in graph %}
+                    <img src="{{ url_for('static', filename=graph) }}" alt="Histogram">
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Boxplot -->
+            <div class="tab-pane fade" id="boxplots" role="tabpanel">
+                <div class="graph-container">
+                    {% for graph in graphs if 'boxplot' in graph %}
+                    <img src="{{ url_for('static', filename=graph) }}" alt="Boxplot">
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Violin Plot -->
+            <div class="tab-pane fade" id="violin" role="tabpanel">
+                <div class="graph-container">
+                    {% for graph in graphs if 'violin' in graph %}
+                    <img src="{{ url_for('static', filename=graph) }}" alt="Violin Plot">
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Korelasyon -->
+            <div class="tab-pane fade" id="correlation" role="tabpanel">
+                <div class="graph-container">
+                    {% for graph in graphs if 'correlation' in graph %}
+                    <img src="{{ url_for('static', filename=graph) }}" alt="Korelasyon Matrisi">
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Zaman Serisi -->
+            {% if time_series %}
+            <div class="tab-pane fade" id="timeseries" role="tabpanel">
+                <div class="graph-container">
+                    {% for graph in graphs if 'timeseries' in graph %}
+                    <img src="{{ url_for('static', filename=graph) }}" alt="Zaman Serisi Grafiği">
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Detaylı İstatistikler -->
+            <div class="tab-pane fade" id="details" role="tabpanel">
+                <div class="stats-card">
+                    <div class="row">
+                        {% for stat in detailed_stats %}
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ stat.name }}:</span>
+                                <strong>{{ stat.value }}</strong>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PDF İndirme Butonu -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('static', filename='reports/analysis_report.pdf') }}" class="btn btn-download" download>
+                <i class="fas fa-file-pdf"></i> PDF Olarak İndir
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html> 

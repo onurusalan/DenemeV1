@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psikoloji & AI Hizmetlerimiz</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: linear-gradient(125deg, #000428, #004e92);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+            padding-top: 100px;
+        }
+
+        main {
+            flex: 1 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            z-index: 2;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+            transform: translateZ(0);
+        }
+
+        .wave {
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            opacity: 0.2;
+            filter: blur(5px);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .wave:nth-child(1) {
+            animation: wave1 25s infinite linear;
+        }
+
+        .wave:nth-child(2) {
+            animation: wave2 35s infinite linear;
+            opacity: 0.1;
+        }
+
+        .glow {
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(20px);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .glow:nth-child(3) {
+            top: 20%;
+            left: 20%;
+            animation: glow1 12s infinite alternate;
+        }
+
+        .glow:nth-child(4) {
+            bottom: 20%;
+            right: 20%;
+            animation: glow2 18s infinite alternate;
+        }
+
+        @keyframes wave1 {
+            to { transform: rotate(360deg) translateY(-50%); }
+        }
+
+        @keyframes wave2 {
+            to { transform: rotate(450deg) translateY(-30%); }
+        }
+
+        @keyframes glow1 {
+            to { transform: scale(1.2); }
+        }
+
+        @keyframes glow2 {
+            to { transform: scale(0.8); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            transform: translateZ(0);
+        }
+
+        .title-container {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .subtitle {
+            color: #00f2fe;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .title {
+            color: #fff;
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.2s forwards;
+        }
+
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            border-radius: 2px;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.4s forwards;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform: translateZ(0);
+            will-change: transform, box-shadow;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+        }
+
+        .service-icon i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .service-title {
+            color: #fff;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .service-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 2.5rem; }
+            .subtitle { font-size: 1rem; letter-spacing: 4px; }
+            .services { grid-template-columns: 1fr; }
+            body { padding: 1rem; }
+        }
+
+        .highlight {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at var(--x) var(--y), rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 2;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            will-change: opacity;
+            transform: translateZ(0);
+        }
+
+        .service-card:hover .highlight {
+            opacity: 1;
+        }
+
+        .coming-soon {
+            opacity: 0.7;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .coming-soon::after {
+            content: "Yakında";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .coming-soon:hover {
+            transform: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    
+    <div class="background-animation">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="glow"></div>
+        <div class="glow"></div>
+    </div>
+
+    <main>
+        <div class="container">
+            <div class="title-container">
+                <div class="subtitle">Hizmetlerimiz</div>
+                <h1 class="title">Psikoloji & AI Çözümleri</h1>
+            </div>
+            <div class="services">
+                <div class="service-card" onclick="window.location.href='/entry';" style="cursor: pointer;">
+                    <div class="highlight"></div>
+                    <div class="service-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h2 class="service-title">Anamnez Yorumlatıcı</h2>
+                    <p class="service-description">Yapay zeka destekli anamnez analizi ve profesyonel yorumlama hizmeti</p>
+                </div>
+                <div class="service-card coming-soon">
+                    <div class="highlight"></div>
+                    <div class="service-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h2 class="service-title">AI Terapi Asistanı</h2>
+                    <p class="service-description">Yakında: Kişiselleştirilmiş yapay zeka destekli terapi önerileri ve takip sistemi</p>
+                </div>
+                <div class="service-card coming-soon">
+                    <div class="highlight"></div>
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h2 class="service-title">Veri Analizi</h2>
+                    <p class="service-description">Yakında: Gelişmiş algoritmalarla psikolojik veri analizi ve raporlama</p>
+                </div>
+                <div class="service-card coming-soon">
+                    <div class="highlight"></div>
+                    <div class="service-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h2 class="service-title">Hedef Odaklı Terapi</h2>
+                    <p class="service-description">Yakında: AI destekli kişisel gelişim ve hedef belirleme programı</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <script>
+        // Performans optimizasyonu için RAF ve passive event listener kullanımı
+        let ticking = false;
+        const updateHighlight = (e, card) => {
+            const highlight = card.querySelector('.highlight');
+            const rect = card.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / card.offsetWidth) * 100;
+            const y = ((e.clientY - rect.top) / card.offsetHeight) * 100;
+            highlight.style.setProperty('--x', `${x}%`);
+            highlight.style.setProperty('--y', `${y}%`);
+            ticking = false;
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.service-card');
+            
+            cards.forEach(card => {
+                // Coming soon kartlarına tıklama olayını engelle
+                if (card.classList.contains('coming-soon')) {
+                    card.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        alert('Bu hizmet yakında kullanıma sunulacak!');
+                    });
+                }
+                
+                card.addEventListener('mousemove', (e) => {
+                    if (!ticking) {
+                        requestAnimationFrame(() => updateHighlight(e, card));
+                        ticking = true;
+                    }
+                }, { passive: true });
+            });
+
+            // VanillaTilt sadece masaüstünde ve coming-soon olmayan kartlarda çalışsın
+            if (window.innerWidth > 768) {
+                const tiltCards = document.querySelectorAll(".service-card:not(.coming-soon)");
+                VanillaTilt.init(tiltCards, {
+                    max: 5,
+                    speed: 400,
+                    glare: true,
+                    "max-glare": 0.2,
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

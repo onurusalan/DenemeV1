@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekibimiz</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: linear-gradient(125deg, #000428, #004e92);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+            padding-top: 100px;
+        }
+
+        main {
+            flex: 1 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+            transform: translateZ(0);
+        }
+
+        .wave {
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            opacity: 0.2;
+            filter: blur(5px);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .wave:nth-child(1) {
+            animation: wave1 25s infinite linear;
+        }
+
+        .wave:nth-child(2) {
+            animation: wave2 35s infinite linear;
+            opacity: 0.1;
+        }
+
+        .glow {
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(20px);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .glow:nth-child(3) {
+            top: 20%;
+            left: 20%;
+            animation: glow1 12s infinite alternate;
+        }
+
+        .glow:nth-child(4) {
+            bottom: 20%;
+            right: 20%;
+            animation: glow2 18s infinite alternate;
+        }
+
+        @keyframes wave1 {
+            to { transform: rotate(360deg) translateY(-50%); }
+        }
+
+        @keyframes wave2 {
+            to { transform: rotate(450deg) translateY(-30%); }
+        }
+
+        @keyframes glow1 {
+            to { transform: scale(1.2); }
+        }
+
+        @keyframes glow2 {
+            to { transform: scale(0.8); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            transform: translateZ(0);
+        }
+
+        .title-container {
+            text-align: center;
+            margin-bottom: 4rem;
+            margin-top: 2rem;
+        }
+
+        .subtitle {
+            color: #00f2fe;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .title {
+            color: #fff;
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.2s forwards;
+        }
+
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            border-radius: 2px;
+        }
+
+        .team-members {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 1rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.4s forwards;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .member-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform: translateZ(0);
+            will-change: transform, box-shadow;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 242, 254, 0.1), rgba(79, 172, 254, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .member-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .member-card:hover::before {
+            opacity: 1;
+        }
+
+        .member-photo {
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #4facfe;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .member-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%;
+            transition: transform 0.3s ease;
+            filter: contrast(1.05) brightness(1.05);
+        }
+
+        /* Sibel Durmuş için özel ayar */
+        .member-card:nth-child(2) .member-photo {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .member-card:nth-child(2) .member-photo img {
+            object-position: center 40%;
+            transform: scale(1.3);
+            filter: contrast(1.1) brightness(1.05);
+        }
+
+        /* Onur Usalan için özel ayar */
+        .member-card:nth-child(3) .member-photo img {
+            object-position: center 25%;
+            transform: scale(1.15);
+        }
+
+        .member-photo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.5);
+        }
+
+        .member-photo:hover img {
+            transform: scale(1.15);
+        }
+
+        /* Sibel Durmuş hover durumu */
+        .member-card:nth-child(2) .member-photo:hover img {
+            transform: scale(1.85);
+        }
+
+        /* Onur Usalan hover durumu */
+        .member-card:nth-child(3) .member-photo:hover img {
+            transform: scale(1.25);
+        }
+
+        .member-name {
+            color: #fff;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .member-title {
+            color: #00f2fe;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .member-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            line-height: 1.6;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            padding: 0 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: #fff;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #00f2fe;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 1200px) {
+            .team-members {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+            .member-photo {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .team-members {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            .member-photo {
+                width: 180px;
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .team-members {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+            .title { font-size: 2.5rem; }
+            .subtitle { font-size: 1rem; letter-spacing: 4px; }
+            body { padding: 1rem; padding-top: 100px; }
+            .member-photo {
+                width: 220px;
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="background-animation">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="glow"></div>
+        <div class="glow"></div>
+    </div>
+    <div class="container">
+        <div class="title-container">
+            <div class="subtitle">Profesyonel Kadromuz</div>
+            <h1 class="title">Ekibimiz</h1>
+        </div>
+        <div class="team-members">
+            <div class="member-card">
+                <div class="member-photo">
+                    <img src="{{ url_for('static', filename='images/team/Gulsah-Kacmaz-2.jpg') }}" alt="Dr. Gülşah Kaçmaz">
+                </div>
+                <h3 class="member-name">Dr. Gülşah Kaçmaz</h3>
+                <div class="member-title">Akademik Danışman</div>
+                <p class="member-description">Bartın Üniversitesi Eğitim Fakültesi Psikolojik Danışmanlık ve Rehberlik Anabilimdalı Akademik Kadrosunda bulunan; bilgisi, kendini sürekli güncel tutması ve yenilikçi karakteriyle öğrencilerine daima ışık tutan bir akademisyen.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <div class="member-card">
+                <div class="member-photo">
+                    <img src="{{ url_for('static', filename='images/team/sibel.jpeg') }}" alt="Sibel Durmuş">
+                </div>
+                <h3 class="member-name">Sibel Durmuş</h3>
+                <div class="member-title">Proje Yürütücüsü</div>
+                <p class="member-description">Psikolojik Danışmanlık ve Rehberlik lisans öğrencisi. Güncel çalışmaları takip edip alanında kendini geliştirmeye gayret eden azimli bir araştırmacı.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <div class="member-card">
+                <div class="member-photo">
+                    <img src="{{ url_for('static', filename='images/team/onurusalan.jpeg') }}" alt="Onur Usalan">
+                </div>
+                <h3 class="member-name">Onur Usalan</h3>
+                <div class="member-title">Veri Bilimci</div>
+                <p class="member-description">Veri bilimi ve üretken yapay zeka alanına ilgili bir araştırmacı.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+</html> 

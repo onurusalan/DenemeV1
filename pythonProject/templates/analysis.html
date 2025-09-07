@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anamnez Rapor Yorumlatıcı</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary-color: #4f46e5;
+            --bg-gradient: linear-gradient(125deg, #000428, #004e92);
+            --accent-color: #00f2fe;
+            --text-color: #fff;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+            color: var(--text-color);
+        }
+
+        .background-animation {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .wave {
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: linear-gradient(45deg, var(--accent-color), #4facfe);
+            opacity: 0.2;
+            filter: blur(5px);
+        }
+
+        .wave:nth-child(1) { animation: wave1 25s infinite linear; }
+        .wave:nth-child(2) { 
+            animation: wave2 35s infinite linear;
+            opacity: 0.1;
+        }
+
+        @keyframes wave1 { to { transform: rotate(360deg) translateY(-50%); } }
+        @keyframes wave2 { to { transform: rotate(450deg) translateY(-30%); } }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar-brand i {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+        }
+
+        .navbar-brand h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            max-width: 800px;
+            margin: 100px auto 2rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        .drop-zone i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 1rem;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        #user-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        #user-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+        }
+
+        #send-btn {
+            background: linear-gradient(45deg, var(--accent-color), #4facfe);
+            border: none;
+            border-radius: 50px;
+            padding: 0 2rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        #send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        .result-box {
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .file-info {
+            margin-top: 1rem;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 1rem; }
+            .navbar-brand h1 { font-size: 1.2rem; }
+            .main-content { margin: 80px 1rem 1rem; padding: 1rem; }
+            .drop-zone { padding: 2rem 1rem; }
+            .nav-btn span { display: none; }
+            .nav-btn { padding: 0.8rem; }
+            .nav-btn i { font-size: 1.2rem; margin: 0; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-brain"></i>
+            <h1>Anamnez Rapor Yorumlatıcı</h1>
+        </div>
+        <div class="navbar-menu">
+            <button onclick="window.location.href='/'" class="nav-btn">
+                <i class="fas fa-home"></i>
+                <span>Ana Sayfa</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-content fade-in">
+        <div class="upload-area">
+            <input type="file" id="fileInput" accept=".pdf" hidden>
+            <div id="drop-zone" class="drop-zone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span id="drop-text">PDF dosyanızı buraya sürükleyin veya tıklayın</span>
+            </div>
+            <div id="file-info" class="file-info"></div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Yorumlamak istediğiniz konuyu yazın..." />
+            <button id="send-btn">Yorumla</button>
+        </div>
+        <div id="result-box" class="result-box"></div>
+    </main>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('file-info');
+        const sendBtn = document.getElementById('send-btn');
+        const userInput = document.getElementById('user-input');
+        const resultBox = document.getElementById('result-box');
+        let selectedFile = null;
+
+        // Dosya yükleme işlemleri
+        const handleFileSelection = (file) => {
+            if (file && file.type === 'application/pdf') {
+                selectedFile = file;
+                fileInfo.innerHTML = `<i class="fas fa-file-pdf" style="color: #00f2fe; margin-right: 8px;"></i>${file.name}`;
+                fileInfo.style.opacity = '1';
+            } else {
+                showError('Lütfen sadece PDF dosyası yükleyin.');
+            }
+        };
+
+        const showError = (message) => {
+            resultBox.innerHTML = `
+                <div style="color: #ff4e4e; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-exclamation-circle"></i>${message}
+                </div>
+            `;
+        };
+
+        // Event Listeners
+        dropZone.onclick = () => fileInput.click();
+        dropZone.ondragover = (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        };
+        dropZone.ondragleave = () => dropZone.classList.remove('dragover');
+        dropZone.ondrop = (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFileSelection(e.dataTransfer.files[0]);
+        };
+        fileInput.onchange = (e) => handleFileSelection(e.target.files[0]);
+        userInput.onkeypress = (e) => { if (e.key === 'Enter') sendBtn.click(); };
+
+        // Yorumlama işlemi
+        sendBtn.onclick = () => {
+            if (!selectedFile) {
+                showError('Lütfen önce bir PDF dosyası yükleyin.');
+                return;
+            }
+
+            const userText = userInput.value.trim();
+            if (!userText) {
+                showError('Lütfen yorumlamak istediğiniz konuyu yazın.');
+                return;
+            }
+
+            resultBox.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-spinner fa-spin" style="color: #00f2fe;"></i>
+                    Rapor yorumlanıyor...
+                </div>
+            `;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('query', userText);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                if (data.message) {
+                    resultBox.innerHTML = `
+                        <div class="analysis-result">
+                            ${data.message.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #00f2fe;">$1</strong>')}
+                        </div>
+                    `;
+                } else {
+                    throw new Error('Sunucudan geçersiz yanıt alındı.');
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                showError(error.message.includes('HTTP error!') 
+                    ? 'Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.'
+                    : error.message.includes('NetworkError')
+                    ? 'İnternet bağlantınızı kontrol edin ve tekrar deneyin.'
+                    : 'Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+            });
+        };
+
+        // VanillaTilt efekti
+        if (window.innerWidth > 768) {
+            VanillaTilt.init(document.querySelector(".main-content"), {
+                max: 3,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.2,
+            });
+        }
+    </script>
+</body>
+</html>

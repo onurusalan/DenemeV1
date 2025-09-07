@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hakkımızda - AnamnesisGPT</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: linear-gradient(125deg, #000428, #004e92);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+            padding-top: 100px;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+            transform: translateZ(0);
+        }
+
+        .wave {
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            opacity: 0.2;
+            filter: blur(5px);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .wave:nth-child(1) {
+            animation: wave1 25s infinite linear;
+        }
+
+        .wave:nth-child(2) {
+            animation: wave2 35s infinite linear;
+            opacity: 0.1;
+        }
+
+        .glow {
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(20px);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .glow:nth-child(3) {
+            top: 20%;
+            left: 20%;
+            animation: glow1 12s infinite alternate;
+        }
+
+        .glow:nth-child(4) {
+            bottom: 20%;
+            right: 20%;
+            animation: glow2 18s infinite alternate;
+        }
+
+        @keyframes wave1 {
+            to { transform: rotate(360deg) translateY(-50%); }
+        }
+
+        @keyframes wave2 {
+            to { transform: rotate(450deg) translateY(-30%); }
+        }
+
+        @keyframes glow1 {
+            to { transform: scale(1.2); }
+        }
+
+        @keyframes glow2 {
+            to { transform: scale(0.8); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            transform: translateZ(0);
+        }
+
+        .title-container {
+            text-align: center;
+            margin-bottom: 4rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .subtitle {
+            color: #00f2fe;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .title {
+            color: #fff;
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            position: relative;
+        }
+
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            border-radius: 2px;
+        }
+
+        .about-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            color: white;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.2s forwards;
+        }
+
+        .about-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.4s forwards;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform: translateZ(0);
+            will-change: transform, box-shadow;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 242, 254, 0.1), rgba(79, 172, 254, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #00f2fe;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-description {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 1200px) {
+            .features {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+            .feature-card {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1rem;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
+            .title {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+                letter-spacing: 4px;
+            }
+            body {
+                padding: 1rem;
+                padding-top: 100px;
+            }
+            .about-section {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="background-animation">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="glow"></div>
+        <div class="glow"></div>
+    </div>
+    
+    <div class="container">
+        <div class="title-container">
+            <div class="subtitle">Bizi Tanıyın</div>
+            <h1 class="title">Hakkımızda</h1>
+        </div>
+
+        <div class="about-section">
+            <div class="about-content">
+                <p>AnamnesisGPT, psikolojik danışmanlık ve rehberlik alanında yapay zeka teknolojisini kullanarak, danışanların ilk görüşme sürecini daha verimli ve etkili hale getirmeyi amaçlayan yenilikçi bir platformdur.</p>
+                <br>
+                <p>Platformumuz, geleneksel anamnez alma sürecini modernize ederek, danışanların kendilerini daha rahat ifade edebilmelerini sağlarken, uzmanlara da daha detaylı ve yapılandırılmış bilgiler sunmaktadır.</p>
+            </div>
+
+            <div class="features">
+                <div class="feature-card" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-perspective="500">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">Yapay Zeka Desteği</h3>
+                    <p class="feature-description">En son teknoloji yapay zeka algoritmaları ile güçlendirilmiş analiz ve değerlendirme sistemi</p>
+                </div>
+
+                <div class="feature-card" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-perspective="500">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3 class="feature-title">Güvenlik ve Gizlilik</h3>
+                    <p class="feature-description">Kişisel verilerin korunması için en üst düzey güvenlik önlemleri</p>
+                </div>
+
+                <div class="feature-card" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-perspective="500">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Detaylı Analiz</h3>
+                    <p class="feature-description">Kapsamlı raporlama ve veri analizi ile profesyonel değerlendirme imkanı</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+    <script>
+        VanillaTilt.init(document.querySelectorAll(".feature-card"), {
+            max: 5,
+            speed: 400,
+            perspective: 500,
+            scale: 1.02
+        });
+    </script>
+</body>
+</html> 

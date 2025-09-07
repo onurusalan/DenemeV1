@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anamnez Sohbet</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(125deg, #000428, #004e92);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+            transform: translateZ(0);
+        }
+
+        .wave {
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            opacity: 0.2;
+            filter: blur(5px);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .wave:nth-child(1) {
+            animation: wave1 25s infinite linear;
+        }
+
+        .wave:nth-child(2) {
+            animation: wave2 35s infinite linear;
+            opacity: 0.1;
+        }
+
+        .glow {
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(20px);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .glow:nth-child(3) {
+            top: 20%;
+            left: 20%;
+            animation: glow1 12s infinite alternate;
+        }
+
+        .glow:nth-child(4) {
+            bottom: 20%;
+            right: 20%;
+            animation: glow2 18s infinite alternate;
+        }
+
+        @keyframes wave1 {
+            to { transform: rotate(360deg) translateY(-50%); }
+        }
+
+        @keyframes wave2 {
+            to { transform: rotate(450deg) translateY(-30%); }
+        }
+
+        @keyframes glow1 {
+            to { transform: scale(1.2); }
+        }
+
+        @keyframes glow2 {
+            to { transform: scale(0.8); }
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar .actions button {
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            margin-left: 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .navbar .actions button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            padding: 1rem;
+            position: fixed;
+            top: 80px; /* Navbar yüksekliği + padding */
+            bottom: 80px; /* Input alanı yüksekliği + padding */
+            left: 0;
+            right: 0;
+            z-index: 2;
+        }
+
+        .chat-box {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding-bottom: 20px;
+        }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            align-items: flex-end;
+        }
+
+        .bubble {
+            padding: 1rem 1.5rem;
+            border-radius: 20px;
+            max-width: 80%;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .bubble.bot {
+            border-bottom-left-radius: 4px;
+        }
+
+        .bubble.user {
+            border-bottom-right-radius: 4px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #fff;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .option-btn.selected, .option-btn:hover {
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        .input-area {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            height: 75px;
+        }
+
+        .input-wrapper {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            height: 100%;
+            padding: 0 0.5rem;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            font-size: 1rem;
+            color: #fff;
+            transition: all 0.3s ease;
+            height: 45px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-wrapper input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #00f2fe;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+        }
+
+        .input-wrapper button {
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 242, 254, 0.3);
+        }
+
+        .input-wrapper button i {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .input-wrapper button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .input-wrapper button:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                top: 70px;
+                bottom: 70px;
+                padding: 0.5rem;
+            }
+
+            .input-area {
+                height: 65px;
+                padding: 0.5rem;
+            }
+
+            .navbar {
+                padding: 0.5rem 1rem;
+            }
+
+            .navbar .logo {
+                font-size: 1.2rem;
+            }
+            .navbar .actions button {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .bubble {
+                font-size: 1rem;
+                padding: 0.8rem 1.2rem;
+            }
+            .input-wrapper {
+                padding: 0;
+            }
+            .input-wrapper input {
+                height: 40px;
+                font-size: 0.95rem;
+                padding: 0.6rem 1rem;
+            }
+            .input-wrapper button {
+                width: 40px;
+                height: 40px;
+            }
+            .input-wrapper button i {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="glow"></div>
+        <div class="glow"></div>
+    </div>
+
+    <div class="navbar">
+        <div class="logo"><i class="fas fa-brain"></i> Anamnez GPT</div>
+        <div class="actions">
+            <button id="reset-chat">Sıfırla</button>
+            <button id="download-pdf">PDF</button>
+            <button id="analysis">Analiz</button>
+        </div>
+    </div>
+
+    <div class="chat-container" id="chat-container">
+        <div class="chat-box" id="chat-box"></div>
+    </div>
+
+    <div class="input-area">
+        <div class="input-wrapper">
+            <input type="text" id="answer-input" placeholder="Cevabınızı yazın...">
+            <button id="send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const answerInput = document.getElementById('answer-input');
+        const sendBtn = document.getElementById('send-btn');
+        const chatContainer = document.getElementById('chat-container');
+        const resetBtn = document.getElementById('reset-chat');
+        const pdfBtn = document.getElementById('download-pdf');
+        const analysisBtn = document.getElementById('analysis');
+
+        // Otomatik scroll
+        function scrollToBottom() {
+            const scrollOptions = {
+                top: chatContainer.scrollHeight,
+                behavior: 'smooth'
+            };
+
+            // Anlık scroll
+            chatContainer.scrollTo(scrollOptions);
+
+            // Yeni mesajların yüklenmesi için kısa bir bekleme
+            setTimeout(() => {
+                chatContainer.scrollTo(scrollOptions);
+            }, 50);
+        }
+
+        // Mesaj ekle
+        function addMessage(text, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message ' + sender;
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble ' + sender;
+            bubble.innerText = text;
+            msgDiv.appendChild(bubble);
+            
+            // Scroll pozisyonunu kontrol et
+            const isScrolledToBottom = chatContainer.scrollHeight - chatContainer.clientHeight <= chatContainer.scrollTop + 1;
+            
+            chatBox.appendChild(msgDiv);
+            
+            // Eğer kullanıcı en alttaysa veya bot mesajıysa otomatik scroll yap
+            if (isScrolledToBottom || sender === 'bot') {
+                scrollToBottom();
+            }
+        }
+
+        // Seçenekli sorular için (radio/checkbox)
+        function renderOptions(options) {
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'options';
+            let selected = [];
+            options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = option;
+                btn.onclick = () => {
+                    if (selected.includes(option)) {
+                        selected = selected.filter(x => x !== option);
+                        btn.classList.remove('selected');
+                    } else {
+                        selected.push(option);
+                        btn.classList.add('selected');
+                    }
+                    // Seçim yapıldığında scroll
+                    requestAnimationFrame(scrollToBottom);
+                };
+                optionsDiv.appendChild(btn);
+            });
+
+            const submitBtn = document.createElement('button');
+            submitBtn.innerText = 'Gönder';
+            submitBtn.className = 'option-btn';
+            submitBtn.style.background = '#2563eb';
+            submitBtn.style.color = '#fff';
+            submitBtn.onclick = () => {
+                if (selected.length > 0) {
+                    answerInput.value = selected.join(', ');
+                    sendBtn.click();
+                }
+            };
+            optionsDiv.appendChild(submitBtn);
+            chatBox.appendChild(optionsDiv);
+            
+            // Seçenekler eklendikten sonra scroll
+            requestAnimationFrame(() => {
+                scrollToBottom();
+                // İkinci bir kontrol
+                setTimeout(scrollToBottom, 100);
+            });
+        }
+
+        // DSM Soruları
+        function renderDSMYesNo(options) {
+            let dsmIndex = 0;
+            let dsmAnswers = [];
+            function askDSM() {
+                const prevOptions = document.querySelectorAll('.dsm-dynamic');
+                prevOptions.forEach(el => el.remove());
+                if (dsmIndex >= options.length) {
+                    answerInput.value = dsmAnswers.join(', ');
+                    waitingForAnswer = false;
+                    fetch("/submit_answer", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ answer: answerInput.value, question: lastAskedQuestion })
+                    }).then(() => {
+                        showEndMessage();
+                        scrollToBottom();
+                    });
+                    return;
+                }
+                const dsmDiv = document.createElement('div');
+                dsmDiv.className = 'options dsm-dynamic';
+                const question = options[dsmIndex];
+                addMessage(question, 'bot');
+                
+                const evetBtn = document.createElement('button');
+                evetBtn.className = 'option-btn';
+                evetBtn.innerText = 'Evet';
+                evetBtn.onclick = () => {
+                    addMessage('Evet', 'user');
+                    dsmAnswers.push(question + ': Evet');
+                    dsmIndex++;
+                    askDSM();
+                    scrollToBottom();
+                };
+                
+                const hayirBtn = document.createElement('button');
+                hayirBtn.className = 'option-btn';
+                hayirBtn.innerText = 'Hayır';
+                hayirBtn.onclick = () => {
+                    addMessage('Hayır', 'user');
+                    dsmAnswers.push(question + ': Hayır');
+                    dsmIndex++;
+                    askDSM();
+                    scrollToBottom();
+                };
+                
+                dsmDiv.appendChild(evetBtn);
+                dsmDiv.appendChild(hayirBtn);
+                chatBox.appendChild(dsmDiv);
+                
+                // DSM sorusu eklendikten sonra scroll
+                requestAnimationFrame(() => {
+                    scrollToBottom();
+                    setTimeout(scrollToBottom, 100);
+                });
+            }
+            askDSM();
+        }
+
+        // Sorular bittiğinde teşekkür mesajı göster
+        function showEndMessage() {
+            addMessage("Sorular bitmiştir. Zaman ayırdığınız için teşekkürler :)", "bot");
+            answerInput.value = "";
+            answerInput.disabled = true;
+            sendBtn.disabled = true;
+        }
+
+        let lastAskedQuestion = "";
+        let waitingForAnswer = false;
+
+        // Geçmiş konuşmayı yükle ve ilk soruyu sor (Flask ile dinamik yapılacak)
+        function loadConversation() {
+            fetch("/get_conversation")
+                .then(response => response.json())
+                .then(data => {
+                    chatBox.innerHTML = "";
+                    let lastQuestion = "";
+                    let lastAnswer = "";
+                    data.forEach(item => {
+                        addMessage(item.question, "bot");
+                        addMessage(item.answer, "user");
+                        lastQuestion = item.question;
+                        lastAnswer = item.answer;
+                    });
+                    // Eğer son soruya cevap verilmişse yeni soru sor
+                    if (!lastQuestion || (lastQuestion && lastAnswer)) {
+                        askNextQuestion();
+                    }
+                    // Eğer son soruya cevap verilmemişse yeni soru sorma (çünkü zaten ekranda)
+                });
+        }
+
+        // Sonraki soruyu sor (Flask ile dinamik)
+        function askNextQuestion() {
+            fetch("/get_question")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.question && data.question !== lastAskedQuestion) {
+                        addMessage(data.question, "bot");
+                        waitingForAnswer = true;
+                        if (data.type === "radio" || data.type === "checkbox") {
+                            if (data.question === "Fiziksel/Somatik Şikayetleriniz:") {
+                                renderOptions(data.options);
+                            } else {
+                                renderOptions(data.options);
+                            }
+                            // Seçenekler eklendikten sonra scroll
+                            requestAnimationFrame(() => {
+                                scrollToBottom();
+                            });
+                        } else if (data.type === "dsm-yesno") {
+                            renderDSMYesNo(data.options);
+                            // DSM soruları eklendikten sonra scroll
+                            requestAnimationFrame(() => {
+                                scrollToBottom();
+                            });
+                        }
+                        lastAskedQuestion = data.question;
+                    } else if (!data.question) {
+                        waitingForAnswer = false;
+                        showEndMessage();
+                    }
+                });
+        }
+
+        // Cevap gönderme
+        sendBtn.onclick = function() {
+            if (!waitingForAnswer) return;
+            const val = answerInput.value.trim();
+            if (val) {
+                addMessage(val, 'user');
+                answerInput.value = '';
+                waitingForAnswer = false;
+                fetch("/submit_answer", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ answer: val, question: lastAskedQuestion })
+                }).then(() => {
+                    askNextQuestion();
+                    // Cevap gönderildikten ve yeni soru geldiğinde scroll
+                    requestAnimationFrame(() => {
+                        scrollToBottom();
+                        setTimeout(scrollToBottom, 200);
+                    });
+                });
+            }
+        };
+        answerInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendBtn.click();
+        });
+
+        // Diğer butonlar
+        resetBtn.onclick = function() {
+            fetch("/reset_chat", { method: "POST" }).then(() => location.reload());
+        };
+        pdfBtn.onclick = function() {
+            fetch("/download_pdf", { method: "GET" })
+                .then(response => response.blob())
+                .then(blob => {
+                    const link = document.createElement("a");
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "sohbet.pdf";
+                    link.click();
+                });
+        };
+        analysisBtn.onclick = function() {
+            window.location.href = '/analysis';
+        };
+
+        // Sayfa yüklendiğinde
+        window.onload = function() {
+            // Chat container'ı en alta kaydır
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            loadConversation();
+        };
+
+        // Pencere yeniden boyutlandığında scroll'u güncelle
+        window.addEventListener('resize', scrollToBottom);
+
+        // Input alanına odaklanıldığında scroll
+        answerInput.addEventListener('focus', scrollToBottom);
+    </script>
+</body>
+</html>

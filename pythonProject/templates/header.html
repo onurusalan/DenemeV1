@@ -1,0 +1,202 @@
+<!-- Header Component -->
+<header class="header">
+    <nav class="nav-container">
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='AnamnesisGPT.png') }}" alt="AnamnesisGPT Logo" class="logo-image">
+        </a>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Ana Sayfa</a>
+            <a href="/services" class="nav-link">Hizmetlerimiz</a>
+            <a href="/about" class="nav-link">Hakkımızda</a>
+            <a href="/team" class="nav-link">Ekibimiz</a>
+            <a href="/goals" class="nav-link">Hedeflerimiz</a>
+            <a href="/contact" class="nav-link">İletişim</a>
+        </div>
+        <div class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+</header>
+
+<style>
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(0, 4, 40, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeInDown 0.8s ease-out;
+    padding: 0.5rem 0;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    position: relative;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transform: translateX(-20px);
+    opacity: 0;
+    animation: slideInLeft 0.8s ease forwards 0.2s;
+    position: absolute;
+    top: -20px;
+}
+
+.logo-image {
+    height: 125px;
+    width: auto;
+    transition: transform 0.3s ease;
+    display: block;
+    filter: brightness(1.2);
+}
+
+.logo-image:hover {
+    transform: scale(1.05);
+    filter: brightness(1.4);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    transform: translateY(-10px);
+    opacity: 0;
+    animation: slideInDown 0.8s ease forwards 0.4s;
+    margin-left: auto;
+}
+
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.nav-link:hover {
+    color: #00f2fe;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #00f2fe, #4facfe);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.mobile-menu-btn {
+    display: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .logo-image {
+        height: 100px;
+    }
+
+    .logo {
+        top: -15px;
+    }
+
+    .nav-container {
+        padding: 0.3rem 1rem;
+        height: 50px;
+    }
+
+    .header {
+        padding: 0.3rem 0;
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    const navLinksItems = document.querySelectorAll('.nav-link');
+
+    mobileMenuBtn.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+        this.querySelector('i').classList.toggle('fa-bars');
+        this.querySelector('i').classList.toggle('fa-times');
+    });
+
+    // Hover efekti için
+    navLinksItems.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+
+        link.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script> 
